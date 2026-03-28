@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, url_for, redirect, flash
+
 from app.extensions import db
-from app.models import Company, Client
-from app.forms import EventForm, CompanyForm, ClientForm
+from app.forms import EventForm, CompanyForm, ClientForm, VenueForm
+from app.models import Company, Client, Venue
 
 create_bp = Blueprint('create', __name__)
 
@@ -12,7 +13,7 @@ def home():
         "create/home.html")
 
 
-@create_bp.route("/create/company" , methods=['GET', 'POST'])
+@create_bp.route("/create/company", methods=['GET', 'POST'])
 def company():
     form = CompanyForm()
 
@@ -57,6 +58,34 @@ def client():
 
     return render_template("create/client.html", form=form)
 
+
+@create_bp.route("/create/venue", methods=['GET', 'POST'])
+def venue():
+    form = VenueForm()
+
+    form.clients.choices = [(c.id, f"{c.name} ({c.company.name})") for c in Client.query.all()]
+
+    if form.validate_on_submit():
+        # Create new Venue instance
+        new_venue = Venue(
+            name=form.name.data,
+            address=form.address.data
+        )
+
+        # Assign selected clients (many-to-many), allow empty selection
+        if form.clients.data:
+            selected_clients = Client.query.filter(Client.id.in_(form.clients.data)).all()
+            new_venue.clients = selected_clients
+        else:
+            new_venue.clients = []  # no clients selected
+
+        db.session.add(new_venue)
+        db.session.commit()
+
+        flash(f"Venue '{new_venue.name}' created successfully.", "success")
+        return redirect(url_for('home.index'))
+
+    return render_template("create/venue.html", form=form)
 
 
 @create_bp.route("/create/event")

@@ -2,9 +2,10 @@
 # from flask_wtf.file import FileField, FileAllowed
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, DateField, TimeField, TextAreaField, SubmitField, \
-    PasswordField, EmailField
+    PasswordField, EmailField, SelectMultipleField
 from wtforms.validators import DataRequired, Optional
 from wtforms.validators import EqualTo, Email
+from app.models import Client
 
 
 class LoginForm(FlaskForm):
@@ -64,3 +65,20 @@ class ClientForm(FlaskForm):
     company_id = SelectField('Company', coerce=int, validators=[DataRequired()])
 
     submit = SubmitField('Create Client')
+
+
+class VenueForm(FlaskForm):
+    name = StringField('Venue Name', validators=[DataRequired()])
+    address = StringField('Address')
+
+    # Multiple clients can be selected
+    clients = SelectMultipleField('Clients', coerce=int)
+
+    submit = SubmitField('Create Venue')
+
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # populate choices dynamically
+        self.clients.choices = [(c.id, c.name) for c in Client.query.all()]
