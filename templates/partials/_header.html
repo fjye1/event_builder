@@ -1,0 +1,14 @@
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+{% endblock %}
+<header>
+    <nav>
+        <h1>Event Builder</h1>
+        <ul>
+            <li><a href="{{ url_for('create.home') }}" class="btn">Create</a></li>
+            <li><a href="{{ url_for('edit.home') }}" class="btn">Edit</a></li>
+            <li><a href="{{ url_for('view.home') }}" class="btn">View</a></li>
+            <li><a href="{{ url_for('profile.home') }}" class="btn">Profile</a></li>
+        </ul>
+    </nav>
+</header>

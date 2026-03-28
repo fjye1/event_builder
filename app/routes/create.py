@@ -2,12 +2,14 @@ from flask import Blueprint, render_template
 
 from app.forms import EventForm
 
-home_bp = Blueprint('home', __name__)
+create_bp = Blueprint('create', __name__)
 
 
-@home_bp.route("/")
-def index():
+@create_bp.route("/")
+def home():
     form = EventForm()
     return render_template(
-        "home/index.html",
+        "create/home.html",
         form=form)
+
+

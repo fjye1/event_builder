@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block title %}Event builder{% endblock %}</title>
+
+    <!--    TODO update flavicon-->
+    <link rel="icon" type="image/svg+xml"
+          href="{{ url_for('static', filename='images/flavicon.svg') }}"/>
+
+    <!-- Open Graph -->
+    <!--    TODO update this section -->
+    <meta property="og:title" content="Event Builder"/>
+    <meta property="og:description"
+          content="an event planning tool for logistics with smart automation, real-time staff notifications, and deep performance analytics."/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="{{ request.url }}"/>
+    <!--    TODO Update share image-->
+    <meta property="og:image"
+          content="{{ url_for('static', filename='images/share_image.png', _external=True) }}"/>
+
+    <!--    TODO update the twitter share card section -->
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Event Builder">
+    <meta name="twitter:description"
+          content="an event planning tool for logistics with smart automation, real-time staff notifications, and deep performance analytics.">
+    <meta name="twitter:image"
+          content="{{ url_for('static', filename='images/share_image.png', _external=True) }}">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- App CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+{% include "partials/_header.html" %}
+
+<main class="container flex-grow-1 py-3">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }} mt-2">
+        {{ message|replace('\n', '<br>')|safe }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+
+</main>
+
+{% include "partials/_footer.html" %}
+
+<!-- App JS -->
+<!--TODO update this script-->
+<script src="{{ url_for('static', filename='js/logo.js') }}"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

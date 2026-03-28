@@ -29,8 +29,8 @@ def login():
 
 
 
-        # 5️ Redirect to home page
-        return redirect(url_for('home.index'))
+        # 5️ Redirect to create page
+        return redirect(url_for('create.index'))
 
     # 6️ Render login template with form
     return render_template("auth/login.html", form=form)
