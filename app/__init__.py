@@ -28,12 +28,14 @@ def create_app():
     login_manager.login_message_category = "info"
 
     # Register blueprints
+    from app.routes.home import home_bp
     from app.routes.create import create_bp
     from app.routes.auth import auth_bp
     from app.routes.edit import edit_bp
     from app.routes.profile import profile_bp
     from app.routes.view import view_bp
 
+    app.register_blueprint(home_bp)
     app.register_blueprint(create_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(edit_bp)
