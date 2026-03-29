@@ -109,14 +109,33 @@ class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     description = db.Column(db.Text)
-    events = db.relationship('Event', secondary='event_product', backref='products')
 
-# Association table for many-to-many Event <-> Product
-event_product = db.Table('event_product',
-    db.Column('event_id', db.Integer, db.ForeignKey('event.id')),
-    db.Column('product_id', db.Integer, db.ForeignKey('product.id'))
+
+class ProductExtra(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    description = db.Column(db.Text)
+
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    product = db.relationship('Product', backref='extras')
+
+
+# Association table for EventProduct <-> ProductExtra
+event_product_extra = db.Table(
+    'event_product_extra',
+    db.Column('event_product_id', db.Integer, db.ForeignKey('event_product.id')),
+    db.Column('product_extra_id', db.Integer, db.ForeignKey('product_extra.id'))
 )
 
+
+class EventProduct(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'))
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
+
+    product = db.relationship('Product')
+    extras = db.relationship('ProductExtra', secondary=event_product_extra)
 
 # ------------------
 # Staff
@@ -143,6 +162,7 @@ class Event(db.Model):
     venue_start_time = db.Column(db.Time)
     start_time = db.Column(db.Time, nullable=False)
     end_time = db.Column(db.Time, nullable=False)
+    products = db.relationship('EventProduct', backref='event')
 
     client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
     venue_id = db.Column(db.Integer, db.ForeignKey('venue.id'))
