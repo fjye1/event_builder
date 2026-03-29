@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, url_for, redirect, flash
 
 from app.extensions import db
-from app.forms import EventForm, CompanyForm, ClientForm, VenueForm, VehicleForm, ProductForm, ProductExtraForm
-from app.models import Company, Client, Venue, Vehicle, FuelType, Product, ProductExtra
+from app.forms import EventForm, CompanyForm, ClientForm, VenueForm, VehicleForm, ProductForm, ProductExtraForm, \
+    SkillForm
+from app.models import Company, Client, Venue, Vehicle, FuelType, Product, ProductExtra, Skill
 
 create_bp = Blueprint('create', __name__)
 
@@ -159,9 +160,6 @@ def skill():
         return redirect(url_for("home.index"))
 
     return render_template("create/skill.html", form=form)
-
-
-
 
 
 @create_bp.route("/create/event")

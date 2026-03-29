@@ -1,0 +1,26 @@
+{% extends 'base/base.html' %}
+
+<!-- Main Content -->
+{% block title %} Skill Builder{% endblock %}
+{% block content %}
+<section id="form-section">
+    <h2>Add a Skill</h2>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        {% for field in form %}
+        <div class="form-group">
+            {{ field.label }}
+            {{ field(class="form-control") }}
+            {% if field.errors %}
+            <ul class="errors">
+                {% for error in field.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+    </form>
+</section>
+{% endblock %}
