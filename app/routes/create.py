@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, url_for, redirect, flash
 
 from app.extensions import db
-from app.forms import EventForm, CompanyForm, ClientForm, VenueForm, VehicleForm, ProductForm
-from app.models import Company, Client, Venue, Vehicle, FuelType, Product
+from app.forms import EventForm, CompanyForm, ClientForm, VenueForm, VehicleForm, ProductForm, ProductExtraForm
+from app.models import Company, Client, Venue, Vehicle, FuelType, Product, ProductExtra
 
 create_bp = Blueprint('create', __name__)
 
@@ -122,6 +122,30 @@ def product():
         flash("Product created successfully!", "success")
         return redirect(url_for("home.index"))
     return render_template("create/product.html", form=form)
+
+
+@create_bp.route("/create/product-extra", methods=['GET', 'POST'])
+def product_extra():
+    form = ProductExtraForm()
+    # populate dropdown with existing products
+    form.product_id.choices = [(p.id, p.name) for p in Product.query.order_by(Product.name).all()]
+
+    if form.validate_on_submit():
+        extra = ProductExtra(
+            name=form.name.data,
+            description=form.description.data,
+            price=form.price.data,
+            product_id=form.product_id.data
+        )
+        db.session.add(extra)
+        db.session.commit()
+        flash("Product Extra created successfully!", "success")
+        return redirect(url_for("home.index"))
+
+    return render_template("create/product_extra.html", form=form)
+
+
+
 
 
 

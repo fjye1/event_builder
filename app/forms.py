@@ -106,3 +106,11 @@ class ProductForm(FlaskForm):
     description = TextAreaField("Description", validators=[Optional()])
     price = DecimalField('Price (£)', validators=[DataRequired(), NumberRange(min=0)], places=2)
     submit = SubmitField("Save Product")
+
+
+class ProductExtraForm(FlaskForm):
+    name = StringField("Extra Name", validators=[DataRequired()])
+    description = TextAreaField("Description", validators=[Optional()])
+    price = DecimalField("Price (£)", validators=[DataRequired(), NumberRange(min=0)])
+    product_id = SelectField("Product", coerce=int, validators=[DataRequired()])  # dropdown
+    submit = SubmitField("Save Extra")
