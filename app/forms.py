@@ -4,7 +4,9 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, DateField, TimeField, TextAreaField, SubmitField, \
     PasswordField, EmailField, SelectMultipleField, IntegerField, DecimalField
 from wtforms.validators import DataRequired, Optional, EqualTo, Email, NumberRange
-from app.models import Client
+from app.models import Client, ProductExtra, Product
+from wtforms_sqlalchemy.fields import QuerySelectMultipleField
+
 
 
 class LoginForm(FlaskForm):
@@ -114,3 +116,20 @@ class ProductExtraForm(FlaskForm):
     price = DecimalField("Price (£)", validators=[DataRequired(), NumberRange(min=0)])
     product_id = SelectField("Product", coerce=int, validators=[DataRequired()])  # dropdown
     submit = SubmitField("Save Extra")
+
+
+class SkillForm(FlaskForm):
+    name = StringField("Skill Name", validators=[DataRequired()])
+    products = QuerySelectMultipleField(
+        "Attach to Products",
+        query_factory=lambda: Product.query.order_by(Product.name).all(),
+        get_label="name",
+        allow_blank=True
+    )
+    product_extras = QuerySelectMultipleField(
+        "Attach to Product Extras",
+        query_factory=lambda: ProductExtra.query.order_by(ProductExtra.name).all(),
+        get_label="name",
+        allow_blank=True
+    )
+    submit = SubmitField("Save Skill")

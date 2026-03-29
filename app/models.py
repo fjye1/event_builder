@@ -101,6 +101,37 @@ event_vehicle = db.Table('event_vehicle',
     db.Column('event_id', db.Integer, db.ForeignKey('event.id')),
     db.Column('vehicle_id', db.Integer, db.ForeignKey('vehicle.id'))
 )
+# ------------------
+# Skills
+# ------------------
+class Skill(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False, unique=True)
+    category = db.Column(db.String(50), nullable=False, default="core")
+    # e.g., "core" = required for doing the product, "service" = optional/service side
+
+# Product ↔ Skill
+product_skill = db.Table(
+    'product_skill',
+    db.Column('product_id', db.Integer, db.ForeignKey('product.id'), primary_key=True),
+    db.Column('skill_id', db.Integer, db.ForeignKey('skill.id'), primary_key=True)
+)
+
+# ProductExtra ↔ Skill
+product_extra_skill = db.Table(
+    'product_extra_skill',
+    db.Column('product_extra_id', db.Integer, db.ForeignKey('product_extra.id'), primary_key=True),
+    db.Column('skill_id', db.Integer, db.ForeignKey('skill.id'), primary_key=True)
+)
+
+class StaffSkill(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    staff_id = db.Column(db.Integer, db.ForeignKey('staff.id'))
+    skill_id = db.Column(db.Integer, db.ForeignKey('skill.id'))
+    proficiency = db.Column(db.Integer, default=0)
+
+    staff = db.relationship('Staff', backref='skills')
+    skill = db.relationship('Skill', backref='staff_members')
 
 # ------------------
 # Product
@@ -120,21 +151,17 @@ class PriceMixin:
 class Product(db.Model, PriceMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
-
     description = db.Column(db.Text)
-
+    skills = db.relationship('Skill', secondary=product_skill, backref='products')
 
 
 class ProductExtra(db.Model, PriceMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
-
     description = db.Column(db.Text)
-
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
     product = db.relationship('Product', backref='extras')
-
-
+    skills = db.relationship('Skill', secondary=product_extra_skill, backref='product_extras')
 
 
 # Association table for EventProduct <-> ProductExtra
@@ -147,34 +174,11 @@ event_product_extra = db.Table(
 
 class EventProduct(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'))
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
-
     product = db.relationship('Product')
     extras = db.relationship('ProductExtra', secondary=event_product_extra)
 
-# ------------------
-# Skills
-# ------------------
-class ProductSkill(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), nullable=False)   # e.g., "Flat Roofing", "Branding Tricycle"
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=True)
-    product_extra_id = db.Column(db.Integer, db.ForeignKey('product_extra.id'), nullable=True)
-
-    product = db.relationship('Product', backref='skills')
-    product_extra = db.relationship('ProductExtra', backref='skills')
-
-
-class StaffSkill(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    staff_id = db.Column(db.Integer, db.ForeignKey('staff.id'))
-    skill_id = db.Column(db.Integer, db.ForeignKey('product_skill.id'))
-    proficiency = db.Column(db.Integer, default=0)   # e.g., 0–5 scale
-
-    staff = db.relationship('Staff', backref='skills')
-    skill = db.relationship('ProductSkill', backref='staff_members')
 
 # ------------------
 # Staff

@@ -145,6 +145,21 @@ def product_extra():
     return render_template("create/product_extra.html", form=form)
 
 
+@create_bp.route("/create/skill", methods=['GET', 'POST'])
+def skill():
+    form = SkillForm()
+    if form.validate_on_submit():
+        skill = Skill(name=form.name.data)
+        # attach selected products
+        skill.products = list(form.products.data)
+        skill.product_extras = list(form.product_extras.data)
+        db.session.add(skill)
+        db.session.commit()
+        flash("Skill created successfully!", "success")
+        return redirect(url_for("home.index"))
+
+    return render_template("create/skill.html", form=form)
+
 
 
 
