@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, url_for, redirect, flash
 
 from app.extensions import db
-from app.forms import EventForm, CompanyForm, ClientForm, VenueForm, VehicleForm
-from app.models import Company, Client, Venue, Vehicle, FuelType
+from app.forms import EventForm, CompanyForm, ClientForm, VenueForm, VehicleForm, ProductForm
+from app.models import Company, Client, Venue, Vehicle, FuelType, Product
 
 create_bp = Blueprint('create', __name__)
 
@@ -106,6 +106,22 @@ def vehicle():
 
         return redirect(url_for("home.index"))
     return render_template("create/vehicle.html", form=form)
+
+
+@create_bp.route("/create/product", methods=['GET', 'POST'])
+def product():
+    form = ProductForm()
+    if form.validate_on_submit():
+        product = Product(
+            name=form.name.data,
+            description=form.description.data
+        )
+        db.session.add(product)
+        db.session.commit()
+        flash("Product created successfully!", "success")
+        return redirect(url_for("home.index"))
+    return render_template("create/product.html", form=form)
+
 
 
 @create_bp.route("/create/event")

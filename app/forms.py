@@ -100,3 +100,9 @@ class VehicleForm(FlaskForm):
     )
 
     submit = SubmitField("Save Vehicle")
+
+
+class ProductForm(FlaskForm):
+    name = StringField("Product Name", validators=[DataRequired()])
+    description = TextAreaField("Description", validators=[Optional()])
+    submit = SubmitField("Save Product")
