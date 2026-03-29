@@ -97,7 +97,7 @@ def vehicle():
         vehicle = Vehicle(
             name=form.name.data,
             license_plate=form.license_plate.data,
-            mileage=form.mileage.data,
+            mileage=form.miles_per_gallon.data,
             fuel_type=FuelType(form.fuel_type.data)
         )
 
@@ -114,7 +114,8 @@ def product():
     if form.validate_on_submit():
         product = Product(
             name=form.name.data,
-            description=form.description.data
+            description=form.description.data,
+            price=form.price.data
         )
         db.session.add(product)
         db.session.commit()

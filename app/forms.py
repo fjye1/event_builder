@@ -2,9 +2,8 @@
 # from flask_wtf.file import FileField, FileAllowed
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, DateField, TimeField, TextAreaField, SubmitField, \
-    PasswordField, EmailField, SelectMultipleField, IntegerField
-from wtforms.validators import DataRequired, Optional
-from wtforms.validators import EqualTo, Email
+    PasswordField, EmailField, SelectMultipleField, IntegerField, DecimalField
+from wtforms.validators import DataRequired, Optional, EqualTo, Email, NumberRange
 from app.models import Client
 
 
@@ -105,4 +104,5 @@ class VehicleForm(FlaskForm):
 class ProductForm(FlaskForm):
     name = StringField("Product Name", validators=[DataRequired()])
     description = TextAreaField("Description", validators=[Optional()])
+    price = DecimalField('Price (£)', validators=[DataRequired(), NumberRange(min=0)], places=2)
     submit = SubmitField("Save Product")

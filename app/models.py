@@ -105,19 +105,36 @@ event_vehicle = db.Table('event_vehicle',
 # ------------------
 # Product
 # ------------------
-class Product(db.Model):
+
+class PriceMixin:
+    """Provides a price column and a Stripe-ready pence property."""
+    price = db.Column(db.Numeric(10, 2), nullable=False, default=0.00)
+
+    @property
+    def price_in_pence(self):
+        if self.price is None:
+            return 0
+        # Rounding before casting to int is a safety best-practice
+        return int(round(self.price * 100))
+
+class Product(db.Model, PriceMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
+
     description = db.Column(db.Text)
 
 
-class ProductExtra(db.Model):
+
+class ProductExtra(db.Model, PriceMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
+
     description = db.Column(db.Text)
 
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
     product = db.relationship('Product', backref='extras')
+
+
 
 
 # Association table for EventProduct <-> ProductExtra
