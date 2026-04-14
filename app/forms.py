@@ -4,9 +4,9 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, DateField, TimeField, TextAreaField, SubmitField, \
     PasswordField, EmailField, SelectMultipleField, IntegerField, DecimalField, BooleanField
 from wtforms.validators import DataRequired, Optional, EqualTo, Email, NumberRange
-from app.models import Client, ProductExtra, Product, Venue, Company
-from wtforms_sqlalchemy.fields import QuerySelectMultipleField, QuerySelectField
+from wtforms_sqlalchemy.fields import QuerySelectMultipleField
 
+from app.models import Client, ProductExtra, Product
 
 
 class LoginForm(FlaskForm):
@@ -48,10 +48,6 @@ class EventForm(FlaskForm):
     submit = SubmitField('Create Event')
 
 
-
-
-
-
 class CompanyForm(FlaskForm):
     name = StringField('Company Name', validators=[DataRequired()])
     submit = SubmitField('Create Company')
@@ -76,8 +72,6 @@ class VenueForm(FlaskForm):
 
     submit = SubmitField('Create Venue')
 
-
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # populate choices dynamically
@@ -88,8 +82,10 @@ class VehicleForm(FlaskForm):
     name = StringField("Vehicle Name", validators=[DataRequired()])
     license_plate = StringField("License Plate")
     miles_per_gallon = IntegerField("Miles per Gallon")
-    product_space = IntegerField("How many products can this vehicle hold")
-    passenger_space = IntegerField("How many passengers can travel in this vehicle")
+    product_space = IntegerField("How many products can this vehicle hold",
+                                 validators=[DataRequired(), NumberRange(min=1, max=4)])
+    passenger_space = IntegerField("How many passengers can travel in this vehicle",
+                                   validators=[DataRequired(), NumberRange(min=1)])
 
     fuel_type = SelectField(
         "Fuel Type",

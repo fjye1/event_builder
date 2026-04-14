@@ -151,13 +151,14 @@ class PriceMixin:
         # Rounding before casting to int is a safety best-practice
         return int(round(self.price * 100))
 
+# This is the table of the base product like just the espresso bike
 class Product(db.Model, PriceMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     description = db.Column(db.Text)
     skills = db.relationship('Skill', secondary=product_skill, backref='products')
 
-
+# this is the table of extras that can be applied to a product branding or espresso printer
 class ProductExtra(db.Model, PriceMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
@@ -174,12 +175,15 @@ event_product_extra = db.Table(
     db.Column('product_extra_id', db.Integer, db.ForeignKey('product_extra.id'))
 )
 
-
 class EventProduct(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'))
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
     product = db.relationship('Product')
+    # NEW
+    start_time = db.Column(db.Time, nullable=True)
+    end_time = db.Column(db.Time, nullable=True)
+
     extras = db.relationship('ProductExtra', secondary=event_product_extra)
 
 
@@ -187,6 +191,7 @@ class EventProduct(db.Model):
 # Staff
 # ------------------
 # Association table for many-to-many Event <-> Staff
+### This table is going to change
 event_staff = db.Table(
     'event_staff',
     db.Column('event_id', db.Integer, db.ForeignKey('event.id'), primary_key=True),
