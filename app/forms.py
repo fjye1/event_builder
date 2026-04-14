@@ -88,6 +88,8 @@ class VehicleForm(FlaskForm):
     name = StringField("Vehicle Name", validators=[DataRequired()])
     license_plate = StringField("License Plate")
     miles_per_gallon = IntegerField("Miles per Gallon")
+    product_space = IntegerField("How many products can this vehicle hold")
+    passenger_space = IntegerField("How many passengers can travel in this vehicle")
 
     fuel_type = SelectField(
         "Fuel Type",
