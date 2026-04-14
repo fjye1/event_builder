@@ -221,7 +221,6 @@ class Staff(db.Model, PriceMixin):
     notes = db.Column(db.Text)
 
     # Relationships
-    event_assignments = db.relationship('EventStaff', backref='staff', cascade="all, delete-orphan")
     skills = db.relationship('StaffSkill', backref='staff', cascade="all, delete-orphan")  # ← keep this
 
 
