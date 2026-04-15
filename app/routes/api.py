@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.models import Company, Client, Venue, Vehicle, FuelType, Product, ProductExtra, Skill, Staff
+from app.models import Client, Product, ProductExtra, Staff, EventProduct
 
 
 api_bp = Blueprint('api', __name__)
@@ -44,3 +44,21 @@ def api_extras():
         return jsonify([])
     extras = ProductExtra.query.filter(ProductExtra.product_id.in_(product_ids)).all()
     return jsonify([{"id": e.id, "name": e.name} for e in extras])
+
+
+@api_bp.route("/api/event_products")
+def api_event_products():
+    event_id = request.args.get("event_id", type=int)
+
+    if not event_id:
+        return jsonify([])
+
+    event_products = EventProduct.query.filter_by(event_id=event_id).all()
+
+    return jsonify([
+        {
+            "id": ep.id,
+            "label": f"{ep.product.name} ({ep.start_time} - {ep.end_time})"
+        }
+        for ep in event_products
+    ])

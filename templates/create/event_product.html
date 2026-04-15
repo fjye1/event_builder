@@ -1,0 +1,39 @@
+{% extends 'base/base.html' %}
+
+<!-- Main Content -->
+{% block title %} Add Product to event{% endblock %}
+{% block content %}
+<section id="form-section">
+    <p>
+        Adding Product
+        at <strong>{{ event.venue_ref.name }}</strong>
+        for <strong>{{ event.client_ref.name }}</strong>
+        at <strong>{{ event.client_ref.company.name }}</strong>.
+    </p>
+
+    <p>
+        <small>
+            (Event: {{ event.event_name or "Unnamed Event" }} — {{ event.date }})
+        </small>
+    </p>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        {% for field in form %}
+        <div class="form-group">
+            {{ field.label }}
+            {{ field(class="form-control") }}
+            {% if field.errors %}
+            <ul class="errors">
+                {% for error in field.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </form>
+    {% block extra_js %}
+    <script src="{{ url_for('static', filename='js/create/event_product.js') }}"></script>
+    {% endblock %}
+</section>
+{% endblock %}

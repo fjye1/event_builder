@@ -28,7 +28,7 @@ class RegisterForm(FlaskForm):
 class EventForm(FlaskForm):
     # Core event identity
     date = DateField('Event Date', validators=[DataRequired()])
-    event_name =StringField('event Nickname', validators=[Optional()])
+    event_name = StringField('Event Name (optional)', validators=[Optional()])
 
     company_id = SelectField('Company', coerce=int, validators=[DataRequired()])
     client_id = SelectField('Client', coerce=int, validators=[DataRequired()])
@@ -39,6 +39,58 @@ class EventForm(FlaskForm):
     notes = TextAreaField('Notes', validators=[Optional()])
 
     submit = SubmitField('Create Event')
+
+
+class EventProductForm(FlaskForm):
+    product_id = SelectField(
+        "Product",
+        coerce=int,
+        validators=[DataRequired()]
+    )
+
+    start_time = TimeField(
+        "Service Start Time",
+        validators=[DataRequired()]
+    )
+
+    end_time = TimeField(
+        "Service End Time",
+        validators=[DataRequired()]
+    )
+
+    extras = SelectMultipleField(
+        "Extras",
+        coerce=int,
+        validators=[Optional()]
+    )
+
+    submit = SubmitField("Add Product")
+
+
+class EventStaffForm(FlaskForm):
+    staff_id = SelectField(
+        "Staff",
+        coerce=int,
+        validators=[DataRequired()]
+    )
+
+    event_product_id = SelectField(
+        "Product (optional)",
+        coerce=int,
+        validators=[Optional()]
+    )
+
+    arrive_unit_time = TimeField(
+        "Arrive at Unit",
+        validators=[Optional()]
+    )
+
+    arrive_venue_time = TimeField(
+        "Arrive at Venue",
+        validators=[Optional()]
+    )
+
+    submit = SubmitField("Assign Staff")
 
 
 class CompanyForm(FlaskForm):

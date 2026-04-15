@@ -2,8 +2,9 @@ from flask import Blueprint, render_template, url_for, redirect, flash
 
 from app.extensions import db
 from app.forms import EventForm, CompanyForm, ClientForm, VenueForm, VehicleForm, ProductForm, ProductExtraForm, \
-    SkillForm, StaffForm
-from app.models import Company, Client, Venue, Vehicle, FuelType, Product, ProductExtra, Skill, Staff, Event
+    SkillForm, StaffForm, EventProductForm, EventStaffForm
+from app.models import Company, Client, Venue, Vehicle, FuelType, Product, ProductExtra, Skill, Staff, Event, \
+    EventProduct, EventStaff
 
 create_bp = Blueprint('create', __name__)
 
@@ -203,7 +204,6 @@ def event():
     form.venue_id.choices = [(0, "— None —")] + [(v.id, v.name) for v in venues]
 
     if form.validate_on_submit():
-
         new_event = Event(
             date=form.date.data,
             company_id=company_id if company_id else None,
@@ -216,6 +216,82 @@ def event():
         db.session.add(new_event)
         db.session.commit()
 
-        return redirect(url_for("create.edit_event", event_id=new_event.id))
+        return redirect(url_for("create.add_event_product", event_id=new_event.id))
 
     return render_template("create/event.html", form=form)
+
+
+@create_bp.route("/create/event/<int:event_id>/product", methods=["GET", "POST"])
+def add_event_product(event_id):
+    form = EventProductForm()
+    event = Event.query.get_or_404(event_id)
+
+    # Populate product choices
+    form.product_id.choices = [(p.id, p.name) for p in Product.query.all()]
+
+    # Populate extras based on selected product
+    product_id = form.product_id.data
+    if product_id:
+        extras = ProductExtra.query.filter_by(product_id=product_id).all()
+    else:
+        extras = []
+
+    form.extras.choices = [(e.id, e.name) for e in extras]
+
+    if form.validate_on_submit():
+        new_event_product = EventProduct(
+            event_id=event.id,
+            product_id=form.product_id.data,
+            start_time=form.start_time.data,
+            end_time=form.end_time.data
+        )
+
+        # Attach extras
+        if form.extras.data:
+            selected_extras = ProductExtra.query.filter(
+                ProductExtra.id.in_(form.extras.data)
+            ).all()
+            new_event_product.extras = selected_extras
+
+        db.session.add(new_event_product)
+        db.session.commit()
+
+        return redirect(
+            url_for("create.add_event_staff", event_product_id=new_event_product.id)
+        )
+
+    return render_template(
+        "create/event_product.html",
+        form=form,
+        event=event
+    )
+
+
+@create_bp.route("/create/event_product/<int:event_product_id>/staff", methods=["GET", "POST"])
+def add_event_staff(event_product_id):
+    form = EventStaffForm()
+
+    event_product = EventProduct.query.get_or_404(event_product_id)
+    event = event_product.event
+    form.staff_id.choices = [(s.id, s.name) for s in Staff.query.filter_by(active=True).all()]
+
+    if form.validate_on_submit():
+        new_event_staff = EventStaff(
+            event_id=event.id,
+            staff_id=form.staff_id.data,
+            event_product_id=form.event_product_id.data or None,
+            arrive_unit_time=form.arrive_unit_time.data,
+            arrive_venue_time=form.arrive_venue_time.data
+        )
+
+        db.session.add(new_event_staff)
+        db.session.commit()
+
+        return redirect(url_for("create.add_event_staff", event_product_id=event_product.id))
+
+    return render_template(
+        "create/event_staff.html",
+        form=form,
+        event=event,
+        event_product=event_product
+    )

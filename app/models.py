@@ -231,7 +231,7 @@ class Event(db.Model):
     event_name = db.Column(db.String(120), nullable=True)
 
     date = db.Column(db.Date, nullable=False)
-
+    company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=True)
     client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
     venue_id = db.Column(db.Integer, db.ForeignKey('venue.id'))
     created_by_id = db.Column(db.Integer, db.ForeignKey('user.id'))
