@@ -2,6 +2,7 @@ from flask import Flask
 from flask_wtf import CSRFProtect
 from flask_migrate import Migrate
 from .extensions import db, login_manager
+from app.utils.gravatar import gravatar_url
 
 csrf = CSRFProtect()
 
@@ -17,6 +18,8 @@ def create_app():
     # Init extensions
     csrf.init_app(app)
     db.init_app(app)
+
+    app.jinja_env.filters['gravatar'] = gravatar_url
 
     # Import models here so Alembic sees them
     from . import models

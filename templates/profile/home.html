@@ -7,18 +7,39 @@
 <div class="profile-container">
     <h2>Profile</h2>
 
-    <div class="profile-card">
-        <p><strong>Name:</strong> {{ user.name }}</p>
-        <p><strong>Email:</strong> {{ user.email }}</p>
+    {% if user.staff %}
 
-        {% if user.staff %}
-            <hr>
-            <h3>Staff Info</h3>
-            <p><strong>Phone:</strong> {{ user.staff.phone }}</p>
-            <p><strong>Role:</strong> {{ user.staff.role }}</p>
-            <p><strong>Active:</strong> {{ user.staff.active }}</p>
-        {% endif %}
+    <div class="profile-card">
+
+        <img src="{{ user.staff.email | gravatar(120) }}" class="profile-img">
+        <p><strong>Name:</strong> {{ user.staff.name }}</p>
+        <p><strong>Email:</strong> {{ user.staff.email }}</p>
+
+        <p><strong>System Role:</strong> {{ user.role }}</p>
+
+        <hr>
+
+        <h3>Staff Info</h3>
+        <p><strong>Phone:</strong> {{ user.staff.phone }}</p>
+        <p><strong>Active:</strong> {{ user.staff.active }}</p>
+        <p><strong>Since:</strong> {{ user.staff.start_date }}</p>
+        <p><strong>Age:</strong> {{ age or "N/A" }}</p>
+
+        <hr>
+
+        <h3>Job Statistics</h3>
+        <p><strong>Total Jobs:</strong> {{ job_stats.total_jobs or "—" }}</p>
+        <p><strong>Most Common Job:</strong> {{ job_stats.most_common_job or "—" }}</p>
+
+        <hr>
+
+        <h3>Staff Skills</h3>
+        <p><strong>Total Skills:</strong> {{ staff_skills.total_skills or "—" }}</p>
+
+
     </div>
+
+    {% endif %}
 </div>
 
 {% endblock %}
