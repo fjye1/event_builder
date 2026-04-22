@@ -1,0 +1,9 @@
+services:
+  event_builder:
+    build: .
+    container_name: event_builder
+    ports:
+      - "5001:5001"
+    environment:
+      - FLASK_ENV=production
+    restart: unless-stopped
