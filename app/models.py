@@ -1,5 +1,5 @@
 import enum
-
+from sqlalchemy import Enum
 from app.extensions import db
 
 
@@ -233,12 +233,26 @@ class Staff(db.Model, PriceMixin):
     skills = db.relationship('StaffSkill', backref='staff', cascade="all, delete-orphan")
     user = db.relationship('User', backref='staff', uselist=False)
 
+
 # ------------------
 # Event
 # ------------------
+
+class EventStatus(enum.Enum):
+    GENERATED = "generated"
+    PENDING = "pending"
+    CONFIRMED = "confirmed"
+    CANCELLED = "cancelled"
+
+
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     event_name = db.Column(db.String(120), nullable=True)
+    status = db.Column(
+        Enum(EventStatus),
+        nullable=True,
+        default=EventStatus.GENERATED
+    )
 
     date = db.Column(db.Date, nullable=False)
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=True)
@@ -290,4 +304,3 @@ class Event(db.Model):
 
         data["extras"] = list(data["extras"])  # ← convert set → list before returning
         return data
-
