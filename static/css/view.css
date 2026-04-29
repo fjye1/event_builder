@@ -1,0 +1,26 @@
+.event-card {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    border: 1px solid #ddd;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+}
+
+.event-left {
+    flex: 1;
+}
+
+.event-right {
+    width: 220px;
+    border-left: 1px solid #eee;
+    padding-left: 15px;
+    font-size: 13px;
+}
+
+.timeline-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 4px 0;
+}

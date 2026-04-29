@@ -211,8 +211,11 @@ class EventStaff(db.Model):
 
     event_product_id = db.Column(db.Integer, db.ForeignKey('event_product.id'), nullable=True)
 
-    arrive_unit_time = db.Column(db.Time, nullable=True)
-    arrive_venue_time = db.Column(db.Time, nullable=True)
+    arrival_mode = db.Column(
+        db.Enum("unit", "venue", name="arrivalmode"),
+        nullable=False,
+        default="unit"
+    )
 
     # Relationships (ONLY where needed)
     staff = db.relationship('Staff')
@@ -239,20 +242,27 @@ class Staff(db.Model, PriceMixin):
 # ------------------
 
 class EventStatus(enum.Enum):
-    GENERATED = "generated"
-    PENDING = "pending"
-    CONFIRMED = "confirmed"
-    CANCELLED = "cancelled"
+    generated = "generated"
+    pending = "pending"
+    confirmed = "confirmed"
+    cancelled = "cancelled"
 
 
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     event_name = db.Column(db.String(120), nullable=True)
     status = db.Column(
-        Enum(EventStatus),
-        nullable=True,
-        default=EventStatus.GENERATED
+        db.Enum(EventStatus),
+        nullable=False,
+        default=EventStatus.generated
     )
+
+    # Note we have moved timing outside EventStaff as it complicated logic
+    arrive_unit_time = db.Column(db.Time, nullable=True)
+    leave_unit_time = db.Column(db.Time, nullable=True)
+    arrive_venue_time = db.Column(db.Time, nullable=True)
+    service_start_time = db.Column(db.Time, nullable=True)
+    service_end_time = db.Column(db.Time, nullable=True)
 
     date = db.Column(db.Date, nullable=False)
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=True)
@@ -273,6 +283,27 @@ class Event(db.Model):
 
     invoice = db.Column(db.String(100))
     notes = db.Column(db.Text)
+
+    def build_staff_schedule(self):
+        schedule = []
+
+        for sa in self.staff_assignments:
+
+            if sa.arrival_mode == "unit":
+                arrive = self.arrive_unit_time
+            else:
+                arrive = self.arrive_venue_time
+
+            schedule.append({
+                "staff": sa.staff.name,
+                "arrival_mode": sa.arrival_mode,
+                "arrive_time": arrive,
+                "service_start": self.service_start_time,
+                "service_end": self.service_end_time
+            })
+
+        return schedule
+
 
     def summary(self):  # ← indented inside the class
         data = {

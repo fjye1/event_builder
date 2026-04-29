@@ -1,5 +1,7 @@
 {% extends "base/base.html" %}
-
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/view.css') }}">
+{% endblock %}
 {% block title %}Event Timeline{% endblock %}
 
 {% block content %}
@@ -14,39 +16,61 @@
 
     {% for event in events %}
 
-    <div class="event-card" style="
-                border: 1px solid #ddd;
-                padding: 10px;
-                margin-bottom: 10px;
-                border-radius: 6px;
-                cursor: pointer;
-            ">
+    <div class="event-card">
 
-        <strong>{{ event.name }}</strong><br>
+        <div class="event-left">
+            <strong>{{ event.name }}</strong><br>
+
+            <small>
+                {% if event.client %}Client: {{ event.client }}<br>{% endif %}
+                {% if event.venue %}Venue: {{ event.venue }}<br>{% endif %}
+
+                {% if event.products %}
+                <strong>Products:</strong><br>
+                {% for p in event.products %}
+                {{ p.name }} ({{ p.start }} – {{ p.end }})<br>
+                {% endfor %}
+                {% endif %}
+
+                {% if event.staff %}
+                <strong>Staff:</strong><br>
+                {% for s in event.staff %}
+                {{ s.name }} — {{ s.product }}<br>
+                {% endfor %}
+                {% endif %}
+            </small>
+        </div>
 
 
-        <small>
-            {% if event.client %}Client: {{ event.client }}<br>{% endif %}
-            {% if event.venue %}Venue: {{ event.venue }}<br>{% endif %}
+        <div class="event-right">
+            <strong>Timeline</strong>
 
-            {% if event.products %}
-            <strong>Products:</strong><br>
-            {% for p in event.products %}
-            {{ p.name }}{% if p.start %} ({{ p.start }} – {{ p.end }}){% endif %}<br>
-            {% endfor %}
-            {% endif %}
+            <div class="timeline-item">
+                <span>Arrive Unit</span>
+                <span>{{ event.arrive_unit }}</span>
+            </div>
 
-            {% if event.staff %}
-            <strong>Staff:</strong><br>
-            {% for s in event.staff %}
-            {{ s.name }}{% if s.product %} — {{ s.product }}{% endif %}<br>
-            {% endfor %}
-            {% endif %}
-        </small>
+            <div class="timeline-item">
+                <span>Leave Unit</span>
+                <span>{{ event.leave_unit }}</span>
+            </div>
 
-        <br>
+            <div class="timeline-item">
+                <span>Arrive Venue</span>
+                <span>{{ event.arrive_venue }}</span>
+            </div>
 
-        <a href="/event/{{ event.id }}">View</a>
+            <div class="timeline-item">
+                <span>Service Start</span>
+                <span>{{ event.service_start }}</span>
+            </div>
+
+            <div class="timeline-item">
+                <span>Service Stop</span>
+                <span>{{ event.service_stop }}</span>
+            </div>
+
+        </div>
 
     </div>
 
