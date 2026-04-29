@@ -208,8 +208,16 @@ def event():
             date=form.date.data,
             company_id=company_id if company_id else None,
             event_name=form.event_name.data,
-            client_id=form.client_id.data if form.client_id.data else None,
-            venue_id=form.venue_id.data if form.venue_id.data else None,
+            client_id=form.client_id.data,
+            venue_id=form.venue_id.data,
+
+            # 🕒 TIMING FIELDS (NEW)
+            arrive_unit_time=form.arrive_unit_time.data,
+            leave_unit_time=form.leave_unit_time.data,
+            arrive_venue_time=form.arrive_venue_time.data,
+            service_start_time=form.service_start_time.data,
+            service_end_time=form.service_end_time.data,
+
             invoice=form.invoice.data,
             notes=form.notes.data
         )

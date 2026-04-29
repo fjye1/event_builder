@@ -26,7 +26,14 @@ def home():
             "client": summary["client"],
             "venue": summary["venue"],
 
-            # optional extras if you want them in UI later
+            # 🕒 TIMING (ADD THIS)
+            "arrive_unit_time": summary.get("arrive_unit_time"),
+            "leave_unit_time": summary.get("leave_unit_time"),
+            "arrive_venue_time": summary.get("arrive_venue_time"),
+            "service_start_time": summary.get("service_start_time"),
+            "service_end_time": summary.get("service_end_time"),
+
+            # existing
             "products": summary["products"],
             "staff_count": len(summary["staff"]),
             "staff": summary["staff"],

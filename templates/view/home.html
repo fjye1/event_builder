@@ -43,31 +43,29 @@
 
 
         <div class="event-right">
-            <strong>Timeline</strong>
-
             <div class="timeline-item">
                 <span>Arrive Unit</span>
-                <span>{{ event.arrive_unit_time or '-' }}</span>
+                <span>{{ event.arrive_unit_time.strftime('%H:%M') if event.arrive_unit_time else '-' }}</span>
             </div>
 
             <div class="timeline-item">
                 <span>Leave Unit</span>
-                <span>{{ event.leave_unit_time or '-' }}</span>
+                <span>{{ event.leave_unit_time.strftime('%H:%M') if event.leave_unit_time else '-' }}</span>
             </div>
 
             <div class="timeline-item">
                 <span>Arrive Venue</span>
-                <span>{{ event.arrive_venue_time or '-' }}</span>
+                <span>{{ event.arrive_venue_time.strftime('%H:%M') if event.arrive_venue_time else '-' }}</span>
             </div>
 
             <div class="timeline-item">
                 <span>Service Start</span>
-                <span>{{ event.service_start_time or '-' }}</span>
+                <span>{{ event.service_start_time.strftime('%H:%M') if event.service_start_time else '-' }}</span>
             </div>
 
             <div class="timeline-item">
                 <span>Service End</span>
-                <span>{{ event.service_end_time or '-' }}</span>
+                <span>{{ event.service_end_time.strftime('%H:%M') if event.service_end_time else '-' }}</span>
             </div>
         </div>
 
