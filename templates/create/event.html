@@ -1,31 +1,60 @@
 {% extends 'base/base.html' %}
-
-<!-- Main Content -->
 {% block title %}Home - Event Builder{% endblock %}
+
 {% block content %}
 <section id="form-section">
     <h2>Create an Event</h2>
     <form method="POST" action="">
         {{ form.hidden_tag() }}
-        {% for field in form %}
+
+        <div class="form-group">
+            {{ form.date.label }}
+            {{ form.date(class="form-control", id="date", placeholder="Select a date") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.event_name.label }}
+            {{ form.event_name(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.company_id.label }}
+            {{ form.company_id(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.client_id.label }}
+            {{ form.client_id(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.venue_id.label }}
+            {{ form.venue_id(class="form-control") }}
+        </div>
+
+        {% for field in [form.arrive_unit_time, form.leave_unit_time, form.arrive_venue_time, form.service_start_time, form.service_end_time] %}
         <div class="form-group">
             {{ field.label }}
-            {{ field(class="form-control") }}
-            {% if field.errors %}
-            <ul class="errors">
-                {% for error in field.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
+            {{ field(class="form-control timepicker", placeholder="--:--") }}
         </div>
         {% endfor %}
+
+        <div class="form-group">
+            {{ form.invoice.label }}
+            {{ form.invoice(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.notes.label }}
+            {{ form.notes(class="form-control") }}
+        </div>
+
+        {{ form.submit(class="btn btn-primary") }}
     </form>
-
-
-    {% block extra_js %}
-    <script src="{{ url_for('static', filename='js/create/event.js') }}"></script>
-    {% endblock %}
-
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/create/flatpickr_init.js') }}"></script>
+<script src="{{ url_for('static', filename='js/create/selects.js') }}"></script>
 {% endblock %}
