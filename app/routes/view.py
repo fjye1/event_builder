@@ -3,6 +3,7 @@ from datetime import datetime
 from app.forms import EventForm
 from app.models import Event
 from collections import defaultdict
+from datetime import date
 
 view_bp = Blueprint('view', __name__)
 
@@ -13,7 +14,15 @@ view_bp = Blueprint('view', __name__)
 
 @view_bp.route("/view")
 def home():
-    events = Event.query.order_by(Event.date.asc()).all()
+
+    today = date.today()
+
+    events = (
+        Event.query
+        .filter(Event.date >= today)
+        .order_by(Event.date.asc())
+        .all()
+    )
 
     grouped = defaultdict(list)
 
@@ -26,7 +35,7 @@ def home():
             "client": summary["client"],
             "venue": summary["venue"],
 
-            # 🕒 TIMING (ADD THIS)
+            # 🕒 TIMING
             "arrive_unit_time": summary.get("arrive_unit_time"),
             "leave_unit_time": summary.get("leave_unit_time"),
             "arrive_venue_time": summary.get("arrive_venue_time"),
