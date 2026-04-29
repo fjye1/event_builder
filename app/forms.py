@@ -26,7 +26,6 @@ class RegisterForm(FlaskForm):
 
 
 class EventForm(FlaskForm):
-    # Core event identity
     date = DateField('Event Date', validators=[DataRequired()])
     event_name = StringField('Event Name (optional)', validators=[Optional()])
 
@@ -34,7 +33,13 @@ class EventForm(FlaskForm):
     client_id = SelectField('Client', coerce=int, validators=[DataRequired()])
     venue_id = SelectField('Venue', coerce=int, validators=[Optional()])
 
-    # Optional metadata
+    # 🕒 TIMING (all optional)
+    arrive_unit_time = TimeField('Arrive Unit Time', validators=[Optional()])
+    leave_unit_time = TimeField('Leave Unit Time', validators=[Optional()])
+    arrive_venue_time = TimeField('Arrive Venue Time', validators=[Optional()])
+    service_start_time = TimeField('Service Start Time', validators=[Optional()])
+    service_end_time = TimeField('Service End Time', validators=[Optional()])
+
     invoice = StringField('Invoice', validators=[Optional()])
     notes = TextAreaField('Notes', validators=[Optional()])
 
@@ -70,15 +75,13 @@ class EventProductForm(FlaskForm):
 class EventStaffForm(FlaskForm):
     staff_id = SelectField('Staff Member', coerce=int, choices=[])
 
-
-
-    arrive_unit_time = TimeField(
-        "Arrive at Unit",
-        validators=[Optional()]
-    )
-
-    arrive_venue_time = TimeField(
-        "Arrive at Venue",
+    # Only control routing mode now
+    arrival_mode = SelectField(
+        'Arrival Mode',
+        choices=[
+            ("unit", "Arrive at Unit"),
+            ("venue", "Arrive at Venue")
+        ],
         validators=[Optional()]
     )
 

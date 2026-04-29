@@ -47,29 +47,28 @@
 
             <div class="timeline-item">
                 <span>Arrive Unit</span>
-                <span>{{ event.arrive_unit }}</span>
+                <span>{{ event.arrive_unit_time or '-' }}</span>
             </div>
 
             <div class="timeline-item">
                 <span>Leave Unit</span>
-                <span>{{ event.leave_unit }}</span>
+                <span>{{ event.leave_unit_time or '-' }}</span>
             </div>
 
             <div class="timeline-item">
                 <span>Arrive Venue</span>
-                <span>{{ event.arrive_venue }}</span>
+                <span>{{ event.arrive_venue_time or '-' }}</span>
             </div>
 
             <div class="timeline-item">
                 <span>Service Start</span>
-                <span>{{ event.service_start }}</span>
+                <span>{{ event.service_start_time or '-' }}</span>
             </div>
 
             <div class="timeline-item">
-                <span>Service Stop</span>
-                <span>{{ event.service_stop }}</span>
+                <span>Service End</span>
+                <span>{{ event.service_end_time or '-' }}</span>
             </div>
-
         </div>
 
     </div>

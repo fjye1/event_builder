@@ -312,7 +312,12 @@ class Event(db.Model):
             "venue": self.venue_ref.name if self.venue_ref else None,
             "products": [],
             "extras": set(),
-            "staff": []
+            "staff": [],
+            "arrive_unit_time": self.arrive_unit_time,
+            "leave_unit_time": self.leave_unit_time,
+            "arrive_venue_time": self.arrive_venue_time,
+            "service_start_time": self.service_start_time,
+            "service_end_time": self.service_end_time,
         }
 
         for ep in self.products:
