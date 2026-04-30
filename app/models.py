@@ -100,14 +100,7 @@ class Vehicle(db.Model):
     product_space = db.Column(db.Integer, nullable=False, default=1)
     passenger_space = db.Column(db.Integer, nullable=False, default=3)
 
-    events = db.relationship('Event', secondary='event_vehicle', backref='vehicles')
 
-
-# Association table for many-to-many Event <-> Vehicle
-event_vehicle = db.Table('event_vehicle',
-                         db.Column('event_id', db.Integer, db.ForeignKey('event.id')),
-                         db.Column('vehicle_id', db.Integer, db.ForeignKey('vehicle.id'))
-                         )
 
 
 # ------------------
@@ -257,13 +250,6 @@ class Event(db.Model):
         default=EventStatus.generated
     )
 
-    # Note we have moved timing outside EventStaff as it complicated logic
-    arrive_unit_time = db.Column(db.Time, nullable=True)
-    leave_unit_time = db.Column(db.Time, nullable=True)
-    arrive_venue_time = db.Column(db.Time, nullable=True)
-    service_start_time = db.Column(db.Time, nullable=True)
-    service_end_time = db.Column(db.Time, nullable=True)
-
     date = db.Column(db.Date, nullable=False)
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=True)
     client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
@@ -280,6 +266,8 @@ class Event(db.Model):
         backref='event',
         cascade="all, delete-orphan"
     )
+
+
 
     invoice = db.Column(db.String(100))
     notes = db.Column(db.Text)
@@ -313,11 +301,7 @@ class Event(db.Model):
             "products": [],
             "extras": set(),
             "staff": [],
-            "arrive_unit_time": self.arrive_unit_time,
-            "leave_unit_time": self.leave_unit_time,
-            "arrive_venue_time": self.arrive_venue_time,
-            "service_start_time": self.service_start_time,
-            "service_end_time": self.service_end_time,
+
         }
 
         for ep in self.products:
@@ -340,3 +324,22 @@ class Event(db.Model):
 
         data["extras"] = list(data["extras"])  # ← convert set → list before returning
         return data
+
+
+class EventMovement(db.Model):
+
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    event_id = db.Column(db.Integer, db.ForeignKey("event.id"), nullable=False)
+
+    movement_type = db.Column(db.String(20))
+    # "delivery" or "pickup"
+
+    date = db.Column(db.Date, nullable=False)
+
+    # optional overrides
+    venue_arrival = db.Column(db.Time, nullable=True)
+    venue_pickup = db.Column(db.Time, nullable=True)
+
+    event = db.relationship("Event", backref="movements")
