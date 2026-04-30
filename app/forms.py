@@ -3,8 +3,9 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, DateField, TimeField, TextAreaField, SubmitField, \
     PasswordField, EmailField, SelectMultipleField, IntegerField, DecimalField, BooleanField
-from wtforms.validators import DataRequired, Optional, EqualTo, Email, NumberRange
+from wtforms.validators import DataRequired, Optional, EqualTo, Email, NumberRange, ValidationError
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField
+from datetime import date
 
 from app.models import Client, ProductExtra, Product
 
@@ -27,23 +28,36 @@ class RegisterForm(FlaskForm):
 
 class EventForm(FlaskForm):
     date = DateField('Event Date', validators=[DataRequired()])
+
+
+
     event_name = StringField('Event Name (optional)', validators=[Optional()])
 
     company_id = SelectField('Company', coerce=int, validators=[DataRequired()])
     client_id = SelectField('Client', coerce=int, validators=[DataRequired()])
     venue_id = SelectField('Venue', coerce=int, validators=[Optional()])
 
-    # 🕒 TIMING (all optional)
-    arrive_unit_time = TimeField('Arrive Unit Time', validators=[Optional()])
-    leave_unit_time = TimeField('Leave Unit Time', validators=[Optional()])
-    arrive_venue_time = TimeField('Arrive Venue Time', validators=[Optional()])
-    service_start_time = TimeField('Service Start Time', validators=[Optional()])
-    service_end_time = TimeField('Service End Time', validators=[Optional()])
+    product_space = IntegerField('Product Space', validators=[Optional()])
+
+    # 🧠 LOGISTICS OFFSETS
+    load_in_offset = IntegerField(
+        'Load-in Offset (days)',
+        default=0,
+        validators=[Optional()]
+    )
+
+    pickup_offset = IntegerField(
+        'Pickup Offset (days)',
+        default=0,
+        validators=[Optional()]
+    )
 
     invoice = StringField('Invoice', validators=[Optional()])
     notes = TextAreaField('Notes', validators=[Optional()])
 
     submit = SubmitField('Create Event')
+
+
 
 
 class EventProductForm(FlaskForm):

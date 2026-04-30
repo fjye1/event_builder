@@ -1,8 +1,8 @@
 import enum
 from sqlalchemy import Enum
 from app.extensions import db
-
-
+import datetime
+from datetime import date
 # ------------------
 # User
 # ------------------
@@ -250,7 +250,7 @@ class Event(db.Model):
         default=EventStatus.generated
     )
 
-    date = db.Column(db.Date, nullable=False)
+    date = db.Column(db.Date, nullable=False, default=date.today)
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=True)
     client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
     venue_id = db.Column(db.Integer, db.ForeignKey('venue.id'))

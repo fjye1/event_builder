@@ -4,12 +4,14 @@
 {% block content %}
 <section id="form-section">
     <h2>Create an Event</h2>
+
     <form method="POST" action="">
         {{ form.hidden_tag() }}
 
         <div class="form-group">
             {{ form.date.label }}
-            {{ form.date(class="form-control", id="date", placeholder="Select a date") }}
+            {{ form.date(class="form-control", id="date") }}
+
         </div>
 
         <div class="form-group">
@@ -32,12 +34,21 @@
             {{ form.venue_id(class="form-control") }}
         </div>
 
-        {% for field in [form.arrive_unit_time, form.leave_unit_time, form.arrive_venue_time, form.service_start_time, form.service_end_time] %}
         <div class="form-group">
-            {{ field.label }}
-            {{ field(class="form-control timepicker", placeholder="--:--") }}
+            {{ form.load_in_offset.label }}
+            {{ form.load_in_offset(class="form-control") }}
+            <small class="form-text text-muted">
+                0 = same day, -1 = day before event (default: 0)
+            </small>
         </div>
-        {% endfor %}
+
+        <div class="form-group">
+            {{ form.pickup_offset.label }}
+            {{ form.pickup_offset(class="form-control") }}
+            <small class="form-text text-muted">
+                0 = same day, +1 = day after event (default: 0)
+            </small>
+        </div>
 
         <div class="form-group">
             {{ form.invoice.label }}

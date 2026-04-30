@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, url_for, redirect, flash, request
+from datetime import date
+
+from flask import Blueprint, render_template, url_for, redirect, flash
 
 from app.extensions import db
 from app.forms import EventForm, CompanyForm, ClientForm, VenueForm, VehicleForm, ProductForm, ProductExtraForm, \
@@ -187,7 +189,6 @@ def staff():
 @create_bp.route("/create/event", methods=["GET", "POST"])
 def event():
     form = EventForm()
-
     # Company dropdown
     companies = Company.query.all()
     form.company_id.choices = [(0, "— None —")] + [(c.id, c.name) for c in companies]
@@ -203,31 +204,35 @@ def event():
     venues = client.venues if client else []
     form.venue_id.choices = [(0, "— None —")] + [(v.id, v.name) for v in venues]
 
+
+
     if form.validate_on_submit():
-        new_event = Event(
-            date=form.date.data,
-            company_id=company_id if company_id else None,
-            event_name=form.event_name.data,
-            client_id=form.client_id.data,
-            venue_id=form.venue_id.data,
+        if form.date.data > date.today():
+            new_event = Event(
+                date=form.date.data,
+                company_id=company_id if company_id else None,
+                event_name=form.event_name.data,
+                client_id=form.client_id.data,
+                venue_id=form.venue_id.data,
 
-            # 🕒 TIMING FIELDS (NEW)
-            arrive_unit_time=form.arrive_unit_time.data,
-            leave_unit_time=form.leave_unit_time.data,
-            arrive_venue_time=form.arrive_venue_time.data,
-            service_start_time=form.service_start_time.data,
-            service_end_time=form.service_end_time.data,
+                # 🕒 TIMING FIELDS (NEW)
+                load_in_offset=form.load_in_offset.data,
+                pickup_offset=form.pickup_offset.data,
 
-            invoice=form.invoice.data,
-            notes=form.notes.data
-        )
+                invoice=form.invoice.data,
+                notes=form.notes.data
+            )
 
-        db.session.add(new_event)
-        db.session.commit()
+            db.session.add(new_event)
+            db.session.commit()
+        else :
+            flash("Event date cannot be in the past", "danger")
+            return render_template("create/event.html", form=form)
+
 
         return redirect(url_for("create.add_event_product", event_id=new_event.id))
 
-    return render_template("create/event.html", form=form)
+    return render_template("create/event.html", form=form, date=date)
 
 
 @create_bp.route("/create/event/<int:event_id>/product", methods=["GET", "POST"])
@@ -278,7 +283,6 @@ def add_event_product(event_id):
 
 @create_bp.route("/create/event_product/<int:event_product_id>/staff", methods=["GET", "POST"])
 def add_event_staff(event_product_id):
-
     current_event_product = EventProduct.query.get_or_404(event_product_id)
     event = current_event_product.event
 
@@ -289,9 +293,7 @@ def add_event_staff(event_product_id):
         (s.id, s.name) for s in Staff.query.filter_by(active=True).all()
     ]
 
-
     if form.validate_on_submit():
-
         new_event_staff = EventStaff(
             event_id=event.id,
             staff_id=form.staff_id.data,
