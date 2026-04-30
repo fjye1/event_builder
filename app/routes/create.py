@@ -1,6 +1,6 @@
 from datetime import date
 
-from flask import Blueprint, render_template, url_for, redirect, flash
+from flask import Blueprint, render_template, url_for, redirect, flash, request
 
 from app.extensions import db
 from app.forms import EventForm, CompanyForm, ClientForm, VenueForm, VehicleForm, ProductForm, ProductExtraForm, \
@@ -253,6 +253,16 @@ def add_event_product(event_id):
     form.extras.choices = [(e.id, e.name) for e in extras]
 
     if form.validate_on_submit():
+
+        # 🧠 TIME VALIDATION
+        if not form.start_time.data or not form.end_time.data:
+            flash("Start time and end time are required", "danger")
+            return render_template("create/event_product.html", form=form, event=event)
+
+        if form.start_time.data >= form.end_time.data:
+            flash("Start time must be before end time", "danger")
+            return render_template("create/event_product.html", form=form, event=event)
+
         new_event_product = EventProduct(
             event_id=event.id,
             product_id=form.product_id.data,
@@ -269,6 +279,9 @@ def add_event_product(event_id):
 
         db.session.add(new_event_product)
         db.session.commit()
+
+        if "add_another" in request.form:
+            return redirect(request.url)
 
         return redirect(
             url_for("create.add_event_staff", event_product_id=new_event_product.id)
