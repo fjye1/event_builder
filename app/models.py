@@ -257,7 +257,12 @@ class Event(db.Model):
     created_by_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     product_space = db.Column(db.Integer, nullable=True)
+    # 🧠 NEW LOGIC CONTROLS
+    load_in_offset = db.Column(db.Integer, default=0)
+    # 0 = same day, -1 = day before, -2 etc
 
+    pickup_offset = db.Column(db.Integer, default=0)
+    # 0 = same day, +1 = next day, +2 etc
     # Relationships
     products = db.relationship('EventProduct', backref='event', cascade="all, delete-orphan")
 
@@ -336,7 +341,7 @@ class EventMovement(db.Model):
     movement_type = db.Column(db.String(20))
     # "delivery" or "pickup"
 
-    date = db.Column(db.Date, nullable=False)
+
 
     # optional overrides
     venue_arrival = db.Column(db.Time, nullable=True)
