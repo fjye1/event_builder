@@ -309,7 +309,7 @@ def delete_event_product(event_product_id):
 def add_event_staff(event_product_id):
     current_event_product = EventProduct.query.get_or_404(event_product_id)
     event = current_event_product.event
-
+    event_products = EventProduct.query.filter_by(event_id=event.id).all()
     form = EventStaffForm()
 
     # Staff choices
@@ -322,8 +322,8 @@ def add_event_staff(event_product_id):
             event_id=event.id,
             staff_id=form.staff_id.data,
             event_product_id=event_product_id or None,
-            arrive_unit_time=form.arrive_unit_time.data,
-            arrive_venue_time=form.arrive_venue_time.data
+            arrival_mode=form.arrival_mode.data
+
         )
 
         db.session.add(new_event_staff)
@@ -337,5 +337,6 @@ def add_event_staff(event_product_id):
         "create/event_staff.html",
         form=form,
         event=event,
-        event_product=current_event_product
+        event_product=current_event_product,
+        event_products=event_products
     )

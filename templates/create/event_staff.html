@@ -38,6 +38,60 @@
         </div>
         {% endfor %}
     </form>
+
+    </form>
+    <div class="event-products-summary mt-5">
+        <h3>Added Products</h3>
+
+        {% for ep in event_products %}
+        <div class="product-card d-flex align-items-center justify-content-between p-3 mb-3">
+
+            <!-- Left: Image + Info -->
+            <div class="d-flex align-items-center gap-3">
+
+                <!-- Image (placeholder for now) -->
+                <img src="{{ ep.product.image_url or url_for('static', filename='img/placeholder.png') }}"
+                     alt="product image"
+                     class="product-thumb">
+
+                <div>
+                    <strong>{{ ep.product.name }}</strong><br>
+                    <small>{{ ep.start_time }} → {{ ep.end_time }}</small>
+
+                    <h4>Assigned Staff:</h4>
+                    <ul>
+                        {% for assignment in ep.staff_assignments %}
+                        <li>
+                            {{ assignment.staff.name }}
+                            <small>({{ assignment.arrival_mode }})</small>
+                        </li>
+                        {% else %}
+                        <li>No staff assigned yet</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Right: Actions -->
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-outline-primary">Edit</button>
+
+                <a href="{{ url_for('create.add_event_staff', event_product_id=ep.id) }}"
+                   class="btn btn-sm btn-outline-secondary">
+                    Add Staff
+                </a>
+
+                <form method="POST"
+                      action="{{ url_for('create.delete_event_product', event_product_id=ep.id) }}">
+                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
+            </div>
+
+        </div>
+        {% else %}
+        <p class="text-muted">No products added yet.</p>
+        {% endfor %}
+    </div>
     {% block extra_js %}
     <script src="{{ url_for('static', filename='js/create/event_staff.js') }}"></script>
     {% endblock %}
