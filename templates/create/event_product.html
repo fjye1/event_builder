@@ -38,7 +38,9 @@
         </div>
         {% endfor %}
 
-
+        <button type="submit" class="btn btn-secondary" name="save_product">
+            Save Product
+        </button>
     </form>
     <div class="event-products-summary mt-5">
         <h3>Added Products</h3>
@@ -56,19 +58,42 @@
 
                 <div>
                     <strong>{{ ep.product.name }}</strong><br>
-                    <small>{{ ep.start_time }} → {{ ep.end_time }}</small>
+                    <small class="text-muted">{{ ep.start_time }} → {{ ep.end_time }}</small>
 
-                    <h4>Assigned Staff:</h4>
-                    <ul>
-                        {% for assignment in ep.staff_assignments %}
-                        <li>
-                            {{ assignment.staff.name }}
-                            <small>({{ assignment.arrival_mode }})</small>
-                        </li>
-                        {% else %}
-                        <li>No staff assigned yet</li>
-                        {% endfor %}
-                    </ul>
+                    <div class="mt-2">
+                        <small class="text-muted">Assigned Staff</small>
+
+                        <ul class="staff-list">
+                            {% for assignment in ep.staff_assignments %}
+                            <li class="d-flex align-items-center gap-2">
+
+                                <img src="{{ assignment.staff.email | gravatar(120) }}"
+                                     class="profile-img-small">
+
+                                <div>
+                                    {{ assignment.staff.name }}<br>
+                                    <small class="text-muted">{{ assignment.arrival_mode }}</small>
+                                </div>
+
+                            </li>
+                            {% else %}
+                            <li class="text-muted">No staff assigned</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="mt-2">
+                        <small class="text-muted">Extras</small>
+
+                        <ul class="extras-list">
+                            {% for extra in ep.extras %}
+                            <li>
+                                {{ extra.name }}
+                            </li>
+                            {% else %}
+                            <li class="text-muted">No extras selected</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
             </div>
 
@@ -93,9 +118,7 @@
         {% endfor %}
     </div>
 
-    <button type="submit" class="btn btn-secondary" name="save_product">
-        Save Product
-    </button>
+
     {% block extra_js %}
     <script src="{{ url_for('static', filename='js/create/flatpickr_init.js') }}"></script>
     <script src="{{ url_for('static', filename='js/create/event_product.js') }}"></script>
