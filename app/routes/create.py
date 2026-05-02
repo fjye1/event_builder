@@ -251,7 +251,7 @@ def add_event_product(event_id):
         extras = []
 
     form.extras.choices = [(e.id, e.name) for e in extras]
-
+    event_products = EventProduct.query.filter_by(event_id=event.id).all()
     if form.validate_on_submit():
 
         # 🧠 TIME VALIDATION
@@ -280,6 +280,8 @@ def add_event_product(event_id):
         db.session.add(new_event_product)
         db.session.commit()
 
+
+
         if "add_another" in request.form:
             return redirect(request.url)
 
@@ -290,7 +292,7 @@ def add_event_product(event_id):
     return render_template(
         "create/event_product.html",
         form=form,
-        event=event
+        event=event, event_products=event_products
     )
 
 
