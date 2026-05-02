@@ -39,15 +39,6 @@
         {% endfor %}
 
 
-        <div class="form-group mt-3">
-            <button type="submit" class="btn btn-secondary" name="add_another" value="1">
-                Add Another Product
-            </button>
-
-            <button type="submit" class="btn btn-primary">
-                Continue to Staff
-            </button>
-        </div>
     </form>
     <div class="event-products-summary mt-5">
         <h3>Added Products</h3>
@@ -84,8 +75,16 @@
             <!-- Right: Actions -->
             <div class="d-flex gap-2">
                 <button class="btn btn-sm btn-outline-primary">Edit</button>
-                <button class="btn btn-sm btn-outline-secondary">Add Staff</button>
-                <button class="btn btn-sm btn-outline-danger">Delete</button>
+
+                <a href="{{ url_for('create.add_event_staff', event_product_id=ep.id) }}"
+                   class="btn btn-sm btn-outline-secondary">
+                    Add Staff
+                </a>
+
+                <form method="POST"
+                      action="{{ url_for('create.delete_event_product', event_product_id=ep.id) }}">
+                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
             </div>
 
         </div>
@@ -93,6 +92,10 @@
         <p class="text-muted">No products added yet.</p>
         {% endfor %}
     </div>
+
+    <button type="submit" class="btn btn-secondary" name="save_product">
+        Save Product
+    </button>
     {% block extra_js %}
     <script src="{{ url_for('static', filename='js/create/flatpickr_init.js') }}"></script>
     <script src="{{ url_for('static', filename='js/create/event_product.js') }}"></script>

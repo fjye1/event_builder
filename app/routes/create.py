@@ -280,9 +280,7 @@ def add_event_product(event_id):
         db.session.add(new_event_product)
         db.session.commit()
 
-
-
-        if "add_another" in request.form:
+        if "save_product" in request.form:
             return redirect(request.url)
 
         return redirect(
@@ -294,7 +292,18 @@ def add_event_product(event_id):
         form=form,
         event=event, event_products=event_products
     )
+@create_bp.route("/event-product/<int:event_product_id>/delete", methods=["POST"])
+def delete_event_product(event_product_id):
+    ep = EventProduct.query.get_or_404(event_product_id)
 
+    event_id = ep.event_id  # needed for redirect
+
+    db.session.delete(ep)
+    db.session.commit()
+
+    flash("Product removed from event", "success")
+
+    return redirect(url_for("create.add_event_product", event_id=event_id))
 
 @create_bp.route("/create/event_product/<int:event_product_id>/staff", methods=["GET", "POST"])
 def add_event_staff(event_product_id):
