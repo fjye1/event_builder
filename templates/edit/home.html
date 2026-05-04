@@ -1,7 +1,22 @@
-{% extends 'base/base.html' %}
+{% extends "base/base.html" %}
 
-<!-- Main Content -->
-{% block title %}Edit{% endblock %}
 {% block content %}
-Edit
+<h2>Edit</h2>
+
+<div class="create-container">
+    <a href="{{ url_for('edit.event_list') }}" class="create-card">Edit Event</a>
+    <a href="{{ url_for('edit.company_list') }}" class="create-card">Edit Company</a>
+    <a href="{{ url_for('edit.client_list') }}" class="create-card">Edit Client</a>
+    <a href="{{ url_for('edit.venue_list') }}" class="create-card">Edit Venue</a>
+    <a href="{{ url_for('edit.vehicle_list') }}" class="create-card">Edit Vehicle</a>
+    <a href="{{ url_for('edit.product_list') }}" class="create-card">Edit Product</a>
+    <a href="{{ url_for('edit.product_extra_list') }}" class="create-card">Edit Product Extra</a>
+    <a href="{{ url_for('edit.skill_list') }}" class="create-card">Edit Skills</a>
+    <a href="{{ url_for('edit.staff_list') }}" class="create-card">Edit Staff Member</a>
+</div>
+
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/create.css') }}">
 {% endblock %}

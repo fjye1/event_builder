@@ -1,0 +1,41 @@
+{% extends "base/base.html" %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/event_list.css') }}">
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h2 class="page-title">Edit Events</h2>
+
+    <div class="event-grid">
+        {% for event in events %}
+            {% set info = event.summary() %}
+            <div class="event-card">
+                <div class="event-header">
+                    <div class="event-title-section">
+                        <h3>{{ info.event_name }}</h3>
+                        <span class="event-date">{{ event.date.strftime('%Y-%m-%d') if event.date else 'No Date' }}</span>
+                    </div>
+                    <a href="{{ url_for('edit.event_edit', event_id=event.id) }}" class="edit-btn">Edit</a>
+                </div>
+
+                <div class="event-body">
+                    <div class="info-row">
+                        <strong>Client:</strong> {{ info.client or 'N/A' }}
+                    </div>
+                    <div class="info-row">
+                        <strong>Venue:</strong> {{ info.venue or 'N/A' }}
+                    </div>
+
+                    <div class="product-tags">
+                        {% for p in info.products %}
+                            <span class="tag">{{ p.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p class="no-data">No events found.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
