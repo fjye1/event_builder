@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect, url_for
 
-from app.models import Event
+from app.models import Event, Company
+from app.forms import CompanyForm
+from app.extensions import db
 
 edit_bp = Blueprint('edit', __name__)
 
@@ -11,29 +13,27 @@ def home():
 
 
 # --- EVENT ---
-@edit_bp.route("/edit/events")
-def event_list():
-    events = Event.query.order_by(Event.date.desc()).all()
-    return render_template(
-        "edit/event_list.html",
-        events=events
-    )
 
-
-@edit_bp.route("/edit/event/<int:event_id>", methods=["GET", "POST"])
-def event_edit(event_id):
-    pass
 
 
 # --- COMPANY ---
 @edit_bp.route("/edit/companies")
 def company_list():
-    pass
+    companies = Company.query.all()
+    return render_template("edit/company/list.html", companies=companies)
 
 
 @edit_bp.route("/edit/company/<int:company_id>", methods=["GET", "POST"])
 def company_edit(company_id):
-    pass
+    company = Company.query.get_or_404(company_id)
+    form = CompanyForm(obj=company)
+
+    if form.validate_on_submit():
+        form.populate_obj(company)
+        db.session.commit()
+        return redirect(url_for("edit.company_list"))
+
+    return render_template("edit/company/edit.html", form=form, company=company)
 
 
 # --- CLIENT ---

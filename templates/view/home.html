@@ -1,4 +1,5 @@
 {% extends "base/base.html" %}
+{% from "macros/event_card.html" import event_card %}
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/view.css') }}">
 {% endblock %}
@@ -15,7 +16,7 @@
     <h3 style="margin-top: 30px;">{{ date.strftime('%A %d %B %Y') }}</h3>
 
 
-    {% from "macros/event_card.html" import event_card %}
+
     <div class="event-products-summary mt-5">
         {% for event in events %}
         {{ event_card(event) }}

@@ -1,0 +1,50 @@
+.list-container {
+    padding: 20px;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+}
+
+.list-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    background: white;
+}
+
+.card-header h4 {
+    margin: 0 0 10px 0;
+}
+
+.muted {
+    color: #777;
+    font-size: 0.9rem;
+}
+
+.card-footer {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+
+.mini-list {
+    margin-top: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.tag {
+    background: #eee;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.tag-secondary {
+    background: #d9edf7;
+}

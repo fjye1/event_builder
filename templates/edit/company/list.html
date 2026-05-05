@@ -1,0 +1,95 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Companies</h2>
+</div>
+
+<div class="list-container">
+
+    {% if companies %}
+    <div class="card-grid">
+
+
+        {% for company in companies %}
+        <div class="list-card">
+
+            <div class="card-header">
+                <h4>{{ company.name }}</h4>
+            </div>
+
+            <div class="card-body">
+
+                <p>
+                    <strong>Clients:</strong>
+                    {{ company.clients|length }}
+                </p>
+
+                {% if company.clients %}
+
+                <div class="mini-list">
+                    {% for client in company.clients[:5] %}
+                    <span class="tag">{{ client.name }}</span>
+                    {% endfor %}
+
+                    {% if company.clients|length > 5 %}
+                    <span class="muted">+{{ company.clients|length - 5 }} more</span>
+                    {% endif %}
+                </div>
+
+                {% else %}
+                <p class="muted">No clients linked</p>
+                {% endif %}
+
+                {# derived venues #}
+                {% set venue_set = [] %}
+                {% for client in company.clients %}
+                {% for venue in client.venues %}
+                {% if venue.name not in venue_set %}
+                {% set _ = venue_set.append(venue.name) %}
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+
+                <p class="mt-2">
+                    <strong>Venues:</strong>
+                    {{ venue_set|length }}
+                </p>
+
+                {% if venue_set %}
+                <div class="mini-list">
+                    {% for v in venue_set[:5] %}
+                    <span class="tag tag-secondary">{{ v }}</span>
+                    {% endfor %}
+
+                    {% if venue_set|length > 5 %}
+                    <span class="muted">+{{ venue_set|length - 5 }} more</span>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+            </div>
+
+            <div class="card-footer">
+                <a href="{{ url_for('edit.company_edit', company_id=company.id) }}"
+                   class="btn btn-sm btn-primary">
+                    Edit
+                </a>
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>No companies found.</p>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/list.css') }}">
+{% endblock %}

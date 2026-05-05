@@ -1,5 +1,5 @@
 {% extends 'base/base.html' %}
-{% from "macros/product_card.html" import product_card %}
+{% from "macros/event_card.html" import event_card %}
 <!-- Main Content -->
 {% block title %} Add Product to event{% endblock %}
 {% block content %}
@@ -44,7 +44,7 @@
     </form>
 
 
-    {% from "macros/event_card.html" import event_card %}
+
     <div class="event-products-summary mt-5">
         {% if event %}
         {{ event_card(event) }}
