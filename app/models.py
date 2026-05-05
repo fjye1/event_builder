@@ -1,8 +1,10 @@
 import enum
 from sqlalchemy import Enum
 from app.extensions import db
-import datetime
+from datetime import datetime
 from datetime import date
+
+
 # ------------------
 # User
 # ------------------
@@ -250,6 +252,11 @@ class Event(db.Model):
         db.Enum(EventStatus),
         nullable=False,
         default=EventStatus.generated
+    )
+    enquiry_date = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.utcnow
     )
 
     date = db.Column(db.Date, nullable=False, default=date.today)
