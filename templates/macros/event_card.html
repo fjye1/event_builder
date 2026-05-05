@@ -19,6 +19,24 @@
             {{ event.client_ref.name }} · {{ event.venue_ref.name }}
         </p>
 
+        <p class="text-muted small mt-1">
+            Created by:
+            {{ event.created_by_name }}
+            {% if event.enquiry_date %}
+            {{ event.enquiry_date.strftime("%d %b %Y %H:%M") }}
+            {% else %}
+            {% endif %}
+        </p>
+        <p class="text-muted small mt-1">
+            Created by:
+            {% if event.created_by and event.created_by.staff %}
+            {{ event.created_by.staff.name }}
+            {% else %}
+            Unknown
+            {% endif %}
+
+        </p>
+
     </div>
 
     <!-- Products -->

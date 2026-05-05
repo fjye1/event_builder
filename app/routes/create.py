@@ -6,7 +6,7 @@ from app.extensions import db
 from app.forms import EventForm, CompanyForm, ClientForm, VenueForm, VehicleForm, ProductForm, ProductExtraForm, \
     SkillForm, StaffForm, EventProductForm, EventStaffForm
 from app.models import Company, Client, Venue, Vehicle, FuelType, Product, ProductExtra, Skill, Staff, Event, \
-    EventProduct, EventStaff
+    EventProduct, EventStaff, EventStatus
 
 create_bp = Blueprint('create', __name__)
 
@@ -214,7 +214,7 @@ def event():
                 event_name=form.event_name.data,
                 client_id=form.client_id.data,
                 venue_id=form.venue_id.data,
-
+                status=EventStatus.pending,
                 # 🕒 TIMING FIELDS (NEW)
                 load_in_offset=form.load_in_offset.data,
                 pickup_offset=form.pickup_offset.data,

@@ -5,6 +5,12 @@ from datetime import datetime
 from datetime import date
 
 
+@property
+def created_by_name(self):
+    if self.created_by and self.created_by.staff:
+        return self.created_by.staff.name
+    return "Unknown"
+
 # ------------------
 # User
 # ------------------

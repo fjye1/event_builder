@@ -11,5 +11,5 @@ def inject_status_colours():
     result = {
         "STATUS_COLOURS": {status.value: cls for status, cls in BOOTSTRAP_CLASS.items()}
     }
-    print("Context injector fired:", result)  # check your terminal
+
     return result
