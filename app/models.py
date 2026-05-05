@@ -264,7 +264,11 @@ class Event(db.Model):
     pickup_offset = db.Column(db.Integer, default=0)
     # 0 = same day, +1 = next day, +2 etc
     # Relationships
-    products = db.relationship('EventProduct', backref='event', cascade="all, delete-orphan")
+    event_products = db.relationship(
+        'EventProduct',
+        backref='event',
+        cascade="all, delete-orphan"
+    )
 
     staff_assignments = db.relationship(
         'EventStaff',
@@ -309,7 +313,7 @@ class Event(db.Model):
 
         }
 
-        for ep in self.products:
+        for ep in self.event_products:
             product_info = {
                 "name": ep.product.name if ep.product else "Unknown",
                 "start": ep.start_time,

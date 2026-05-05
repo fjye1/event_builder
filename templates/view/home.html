@@ -14,66 +14,18 @@
 
     <h3 style="margin-top: 30px;">{{ date.strftime('%A %d %B %Y') }}</h3>
 
-    {% for event in events %}
 
-    <div class="event-card">
-
-        <div class="event-left">
-            <strong>{{ event.name }}</strong><br>
-
-            <small>
-                {% if event.client %}Client: {{ event.client }}<br>{% endif %}
-                {% if event.venue %}Venue: {{ event.venue }}<br>{% endif %}
-
-                {% if event.products %}
-                <strong>Products:</strong><br>
-                {% for p in event.products %}
-                {{ p.name }} ({{ p.start }} – {{ p.end }})<br>
-                {% endfor %}
-                {% endif %}
-
-                {% if event.staff %}
-                <strong>Staff:</strong><br>
-                {% for s in event.staff %}
-                {{ s.name }} — {{ s.product }}<br>
-                {% endfor %}
-                {% endif %}
-            </small>
-        </div>
-
-
-        <div class="event-right">
-            <div class="timeline-item">
-                <span>Arrive Unit</span>
-                <span>{{ event.arrive_unit_time.strftime('%H:%M') if event.arrive_unit_time else '-' }}</span>
-            </div>
-
-            <div class="timeline-item">
-                <span>Leave Unit</span>
-                <span>{{ event.leave_unit_time.strftime('%H:%M') if event.leave_unit_time else '-' }}</span>
-            </div>
-
-            <div class="timeline-item">
-                <span>Arrive Venue</span>
-                <span>{{ event.arrive_venue_time.strftime('%H:%M') if event.arrive_venue_time else '-' }}</span>
-            </div>
-
-            <div class="timeline-item">
-                <span>Service Start</span>
-                <span>{{ event.service_start_time.strftime('%H:%M') if event.service_start_time else '-' }}</span>
-            </div>
-
-            <div class="timeline-item">
-                <span>Service End</span>
-                <span>{{ event.service_end_time.strftime('%H:%M') if event.service_end_time else '-' }}</span>
-            </div>
-        </div>
-
+    {% from "macros/event_card.html" import event_card %}
+    <div class="event-products-summary mt-5">
+        {% for event in events %}
+        {{ event_card(event) }}
+        {% endfor %}
     </div>
 
-    {% endfor %}
 
-    {% endfor %}
+</div>
+{% endfor %}
+
 
 </div>
 

@@ -1,5 +1,5 @@
 {% extends 'base/base.html' %}
-
+{% from "macros/product_card.html" import product_card %}
 <!-- Main Content -->
 {% block title %} Add Product to event{% endblock %}
 {% block content %}
@@ -42,82 +42,14 @@
             Save Product
         </button>
     </form>
+
+
+    {% from "macros/event_card.html" import event_card %}
     <div class="event-products-summary mt-5">
-        <h3>Added Products</h3>
-
-        {% for ep in event_products %}
-        <div class="product-card d-flex align-items-center justify-content-between p-3 mb-3">
-
-            <!-- Left: Image + Info -->
-            <div class="d-flex align-items-center gap-3">
-
-                <!-- Image (placeholder for now) -->
-                <img src="{{ ep.product.image_url or url_for('static', filename='img/placeholder.png') }}"
-                     alt="product image"
-                     class="product-thumb">
-
-                <div>
-                    <strong>{{ ep.product.name }}</strong><br>
-                    <small class="text-muted">{{ ep.start_time }} → {{ ep.end_time }}</small>
-
-                    <div class="mt-2">
-                        <small class="text-muted">Assigned Staff</small>
-
-                        <ul class="staff-list">
-                            {% for assignment in ep.staff_assignments %}
-                            <li class="d-flex align-items-center gap-2">
-
-                                <img src="{{ assignment.staff.email | gravatar(120) }}"
-                                     class="profile-img-small">
-
-                                <div>
-                                    {{ assignment.staff.name }}<br>
-                                    <small class="text-muted">{{ assignment.arrival_mode }}</small>
-                                </div>
-
-                            </li>
-                            {% else %}
-                            <li class="text-muted">No staff assigned</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    <div class="mt-2">
-                        <small class="text-muted">Extras</small>
-
-                        <ul class="extras-list">
-                            {% for extra in ep.extras %}
-                            <li>
-                                {{ extra.name }}
-                            </li>
-                            {% else %}
-                            <li class="text-muted">No extras selected</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right: Actions -->
-            <div class="d-flex gap-2">
-                <button class="btn btn-sm btn-outline-primary">Edit</button>
-
-                <a href="{{ url_for('create.add_event_staff', event_product_id=ep.id) }}"
-                   class="btn btn-sm btn-outline-secondary">
-                    Add Staff
-                </a>
-
-                <form method="POST"
-                      action="{{ url_for('create.delete_event_product', event_product_id=ep.id) }}">
-                    <button class="btn btn-sm btn-outline-danger">Delete</button>
-                </form>
-            </div>
-
-        </div>
-        {% else %}
-        <p class="text-muted">No products added yet.</p>
-        {% endfor %}
+        {% if event %}
+        {{ event_card(event) }}
+        {% endif %}
     </div>
-
 
     {% block extra_js %}
     <script src="{{ url_for('static', filename='js/create/flatpickr_init.js') }}"></script>

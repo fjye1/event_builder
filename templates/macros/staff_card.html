@@ -1,0 +1,20 @@
+{% macro staff_card(assignments) %}
+<div class="mt-2">
+    <small class="text-muted">Assigned Staff</small>
+
+    <ul class="staff-list">
+        {% for assignment in assignments %}
+        <li class="d-flex align-items-center gap-2">
+            <img src="{{ assignment.staff.email | gravatar(120) }}"
+                 class="profile-img-small">
+            <div>
+                {{ assignment.staff.name }}<br>
+                <small class="text-muted">{{ assignment.arrival_mode }}</small>
+            </div>
+        </li>
+        {% else %}
+        <li class="text-muted">No staff assigned</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endmacro %}
