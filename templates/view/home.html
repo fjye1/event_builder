@@ -1,5 +1,5 @@
 {% extends "base/base.html" %}
-{% from "macros/event_card.html" import event_card %}
+{% from "macros/event_card.html" import event_card with context %}
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/view.css') }}">
 {% endblock %}

@@ -9,10 +9,16 @@
             {{ event.event_name or (event.client_ref.company.name ~ " Event") }}
         </h4>
 
+        <span class="status-badge {{ STATUS_COLOURS[event.status.value] }}">
+            {{ event.status.value }}
+        </span>
+
+
         <p class="text-muted mb-0">
             {{ event.client_ref.company.name }}
             {{ event.client_ref.name }} · {{ event.venue_ref.name }}
         </p>
+
     </div>
 
     <!-- Products -->
@@ -21,9 +27,9 @@
         <h5 class="mb-3">Products</h5>
 
         {% for ep in event.event_products %}
-            {{ product_card(ep) }}
+        {{ product_card(ep) }}
         {% else %}
-            <p class="text-muted">No products added yet.</p>
+        <p class="text-muted">No products added yet.</p>
         {% endfor %}
 
     </div>

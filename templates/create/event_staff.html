@@ -40,7 +40,7 @@
     </form>
 
     </form>
-    {% from "macros/event_card.html" import event_card %}
+    {% from "macros/event_card.html" import event_card with context %}
     <div class="event-products-summary mt-5">
         {% if event %}
         {{ event_card(event) }}

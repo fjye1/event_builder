@@ -241,6 +241,8 @@ class EventStatus(enum.Enum):
     cancelled = "cancelled"
 
 
+
+
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     event_name = db.Column(db.String(120), nullable=True)

@@ -3,7 +3,7 @@ from flask_wtf import CSRFProtect
 from flask_migrate import Migrate
 from .extensions import db, login_manager
 from app.utils.gravatar import gravatar_url
-
+from app.context_injectors import inject_status_colours
 csrf = CSRFProtect()
 
 
@@ -46,5 +46,7 @@ def create_app():
     app.register_blueprint(profile_bp)
     app.register_blueprint(view_bp)
     app.register_blueprint(api_bp)
+
+    app.context_processor(inject_status_colours)
 
     return app

@@ -83,3 +83,15 @@
     border-radius: 6px;
     border: 1px solid #ccc;
 }
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    color: white;
+}
+
+.status--generated  { background-color: #6c757d; color: #fff; }
+.status--pending    { background-color: #f0ad4e; color: #fff; }
+.status--confirmed  { background-color: #28a745; color: #fff; }
+.status--cancelled  { background-color: #dc3545; color: #fff; }
