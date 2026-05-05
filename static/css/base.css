@@ -91,7 +91,7 @@
     color: white;
 }
 
-.status--generated  { background-color: #6c757d; color: #fff; }
-.status--pending    { background-color: #f0ad4e; color: #fff; }
-.status--confirmed  { background-color: #28a745; color: #fff; }
-.status--cancelled  { background-color: #dc3545; color: #fff; }
+.status--generated  { background-color: #9900FF; color: #fff; }
+.status--pending    { background-color: #FF0100; color: #fff; }
+.status--confirmed  { background-color: #0100FF; color: #fff; }
+.status--cancelled  { background-color: #02FF00; color: #fff; }
